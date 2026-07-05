@@ -627,3 +627,22 @@ body.f-collage .sec-sub { font-family: "Caveat", cursive; font-size: 1.25rem; li
   .hv-shot { position: static; opacity: 1; animation: none; z-index: auto;
     flex: 0 0 calc(50% - 0.4rem); width: calc(50% - 0.4rem); left: auto; right: auto; top: auto; bottom: auto; }
 }
+
+
+/* ---------- Showcase hero → clean aligned gallery (replaced floating cards) ---------- */
+.hv-showcase { min-height: auto; display: block; padding-bottom: 3rem; }
+.hv-showcase .hv-center-in { position: relative; z-index: 2; }
+.hv-gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.1rem; margin-top: 3.4rem; }
+.hv-gcard figure { margin: 0; border: 1.5px solid var(--cbd); border-radius: var(--rad); overflow: hidden;
+  background: var(--sur); box-shadow: var(--csh);
+  transition: transform .4s cubic-bezier(.2,.7,.2,1), box-shadow .4s ease; }
+.hv-gcard img { display: block; width: 100%; aspect-ratio: 16/11; object-fit: cover; object-position: top; }
+.hv-gcard figcaption { font-family: var(--jm); font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase;
+  padding: 0.65rem 0.85rem; color: var(--mut); border-top: 1px solid var(--line); }
+@media (hover: hover) and (pointer: fine) {
+  .hv-gcard:hover figure { transform: translateY(-6px); box-shadow: 0 26px 54px rgba(0,0,0,0.34); }
+}
+@media (max-width: 900px) {
+  .hv-showcase { display: block; }
+  .hv-gallery { grid-template-columns: repeat(2, 1fr); gap: 0.7rem; margin-top: 2rem; }
+}
