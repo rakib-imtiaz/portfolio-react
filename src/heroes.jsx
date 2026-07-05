@@ -168,23 +168,27 @@ const SHOTS = [
 ];
 const ShowcaseHero = ({ ed }) => (
   <header className="hero hv-showcase">
-    {SHOTS.map((s) => (
-      <div key={s.cls} className={"hv-shot " + s.cls}>
-        <figure>
-          <img src={s.img} alt={s.label} loading="lazy" />
-          <figcaption>{s.label}</figcaption>
-        </figure>
-      </div>
-    ))}
     <div className="wrap hv-center-in">
       <Kick />
       <H1 fam={ed.family} />
       <Reveal delay={240}>
         <p className="sub" style={{ marginInline: "auto" }}>
-          Every screenshot floating here is a real capture of shipped work.
+          Every screenshot below is a real capture of shipped work.
         </p>
       </Reveal>
       <Reveal delay={320}><Ctas center /></Reveal>
+    </div>
+    <div className="wrap">
+      <div className="hv-gallery">
+        {SHOTS.map((s, i) => (
+          <Reveal key={s.cls} delay={i * 90} className="hv-gcard">
+            <figure>
+              <img src={s.img} alt={s.label} loading="lazy" />
+              <figcaption>{s.label}</figcaption>
+            </figure>
+          </Reveal>
+        ))}
+      </div>
     </div>
   </header>
 );
