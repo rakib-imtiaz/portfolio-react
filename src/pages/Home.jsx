@@ -13,7 +13,6 @@ const MARQ = [
   { logo: "mysql", label: "MySQL" },
   { logo: "python", label: "Python" },
   { logo: "playwright", label: "Playwright" },
-  { label: "Available for projects" },
 ];
 
 export default function Home() {

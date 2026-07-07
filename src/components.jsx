@@ -3,7 +3,7 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import { PROFILE } from "./data";
 import { THEMES } from "./themes";
 
-export const ThemeCtx = createContext({ themeIndex: 0, cycleTheme: () => {} });
+export const ThemeCtx = createContext({ themeIndex: 0, cycleTheme: () => {}, setTheme: () => {} });
 
 /* ---------- IntroGate: full-screen opening film per page ----------
    Plays ONCE per page per session (revisits skip straight to content).
@@ -113,9 +113,12 @@ export function Nav() {
           ))}
         </div>
         <div style={{ display: "flex", gap: "0.6rem", alignItems: "center" }}>
-          <ThemeSwitch />
+          <ThemeControls />
           <a className="gh-btn" href={PROFILE.github} target="_blank" rel="noopener noreferrer">
-            GitHub ↗
+            <svg className="gh-ico" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="currentColor">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+            GitHub
           </a>
           <button className="nav-burger" onClick={() => setOpen(!open)}>
             {open ? "Close" : "Menu"}
@@ -140,21 +143,75 @@ export function Nav() {
   );
 }
 
-/* ---------- ThemeSwitch — cycles the 20 design editions ---------- */
-function ThemeSwitch() {
-  const { themeIndex, cycleTheme } = useContext(ThemeCtx);
+/* ---------- ThemeControls — glass picker + AUTO cycler ---------- */
+function ThemeControls() {
+  const { themeIndex, cycleTheme, setTheme } = useContext(ThemeCtx);
+  const [open, setOpen] = useState(false);
+  const [auto, setAuto] = useState(false);
+  const ref = useRef(null);
   const t = THEMES[themeIndex];
+
+  // close popover on outside click / Escape
+  useEffect(() => {
+    if (!open) return;
+    const onDoc = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    const onKey = (e) => { if (e.key === "Escape") setOpen(false); };
+    document.addEventListener("mousedown", onDoc);
+    document.addEventListener("keydown", onKey);
+    return () => { document.removeEventListener("mousedown", onDoc); document.removeEventListener("keydown", onKey); };
+  }, [open]);
+
+  // AUTO: cycle editions on an interval while enabled
+  useEffect(() => {
+    if (!auto) return;
+    const id = setInterval(cycleTheme, 3200);
+    return () => clearInterval(id);
+  }, [auto, cycleTheme]);
+
   return (
-    <button
-      className="theme-sw"
-      onClick={cycleTheme}
-      title={`Edition ${themeIndex + 1}/${THEMES.length}: ${t.name} — click for next design`}
-      aria-label={`Switch design edition (current: ${t.name})`}
-    >
-      <span className="dot on" style={{ background: t.vars["--acc"] }} />
-      <span className="sw-num">{String(themeIndex + 1).padStart(2, "0")}/{THEMES.length}</span>
-      <span className="sw-name">{t.name}</span>
-    </button>
+    <div className="theme-ctl" ref={ref}>
+      <button
+        className={"glass-pill sw-pick" + (open ? " open" : "")}
+        onClick={() => setOpen((o) => !o)}
+        title={`Design: ${t.name} — click to choose`}
+        aria-label={`Choose design edition (current: ${t.name})`}
+        aria-expanded={open}
+      >
+        <span className="dot on" style={{ background: t.vars["--acc"] }} />
+        <span className="sw-name">{t.name}</span>
+        <span className="sw-caret" aria-hidden="true">▾</span>
+      </button>
+
+      <button
+        className={"glass-pill auto-btn" + (auto ? " on" : "")}
+        onClick={() => setAuto((a) => !a)}
+        title={auto ? "Stop auto-cycling designs" : "Auto-cycle through designs"}
+        aria-pressed={auto}
+      >
+        AUTO {auto ? "ON" : "OFF"}
+      </button>
+
+      {open && (
+        <div className="glass-pop theme-pop" role="menu">
+          <div className="pop-head">Design editions · {THEMES.length}</div>
+          <div className="pop-grid">
+            {THEMES.map((th, i) => (
+              <button
+                key={th.id}
+                className={"pop-item" + (i === themeIndex ? " active" : "")}
+                onClick={() => { setTheme(i); setOpen(false); }}
+                role="menuitem"
+                title={th.name}
+              >
+                <span className="dot" style={{ background: th.vars["--acc"] }} />
+                <span className="pi-name">{th.name}</span>
+                <span className="pi-num">{String(i + 1).padStart(2, "0")}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 

@@ -19,8 +19,12 @@ function App() {
     setThemeIndex((i) => (i + 1) % THEMES.length);
   }, []);
 
+  const setTheme = useCallback((i) => {
+    setThemeIndex(((i % THEMES.length) + THEMES.length) % THEMES.length);
+  }, []);
+
   return (
-    <ThemeCtx.Provider value={{ themeIndex, cycleTheme }}>
+    <ThemeCtx.Provider value={{ themeIndex, cycleTheme, setTheme }}>
       <BrowserRouter>
         <ScrollToTop />
         <Nav />
