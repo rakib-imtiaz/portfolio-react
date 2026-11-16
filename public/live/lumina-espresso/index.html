@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%230b0908'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23c7924a'/%3E%3C/svg%3E" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <meta
+      name="description"
+      content="LUMINA — a prosumer espresso machine, rendered as a procedural, scroll-driven 3D scene."
+    />
+    <title>LUMINA — the extraction machine</title>
+    <script type="module" crossorigin src="./assets/index-Bkw4Zc4u.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-1tVghxP9.css">
+  </head>
+  <body>
+    <!--
+      WebGL / pre-boot fallback: always present in the DOM and visible by
+      default (needs no JS to show). Hidden by adding `booted` to <body>
+      once the three.js scene has rendered its first frame successfully.
+      If WebGL is unavailable, App.tsx never adds that class, so this stays
+      visible — there is no blank hero under any failure mode.
+    -->
+    <div id="webgl-fallback" class="webgl-fallback">
+      <div class="webgl-fallback-inner">
+        <h1>LUMINA</h1>
+        <p>
+          Loading the interactive scene&hellip; If it doesn’t appear, here’s the short version:
+          LUMINA is a prosumer espresso machine in brushed stainless and warm brass — a boiler
+          body, a brass group head, a portafilter that locks in with a quarter turn, and nine
+          bars of pressure behind every shot.
+        </p>
+      </div>
+    </div>
+    <div id="root"></div>
+  </body>
+</html>
